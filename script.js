@@ -10,13 +10,9 @@ function tick() {
   const src = attr.value;
   if(src === "tick_.png") {
     btn.setAttribute("src","tick.png");
-    btn.setAttribute("width","32");
-    btn.setAttribute("height","32");
   }
   else {
     btn.setAttribute("src","tick_.png");
-    btn.setAttribute("width","25");
-    btn.setAttribute("height","25");
   }
 
 }
