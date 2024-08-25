@@ -96,3 +96,11 @@ body {
   }
 }
 
+.todo-div {
+  margin-left: 150px;
+  margin-right: 150px;
+  margin-bottom: 0px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
