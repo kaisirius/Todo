@@ -3,6 +3,62 @@ let todoTitle = document.querySelector('#todo-title');
 let todoDetails = document.querySelector('#todo-details');
 let taskNo = 1;
 
+
+
+//drag and drop functions
+function drag(ev) {
+  ev.dataTransfer.setData("text",ev.target.id);
+}
+function allowdrop(ev) {
+  ev.preventDefault();
+}
+function drop(ev) {
+  ev.preventDefault();
+  let oldId = ev.dataTransfer.getData("text");
+  let num1 = oldId.split('-');
+  num1 = Number(num1[1]);
+
+  let newId = ev.target.id;
+  let num2 = newId.split('-');
+  num2 = Number(num2[1]);
+
+  console.log(`old Id : ${num1}`);
+  console.log(`new Id : ${num2}`);
+
+  let oldTitleDiv = document.querySelector(`#todo-${num1}-title`);
+  let oldDetailsDiv = document.querySelector(`#todo-${num1}-details`);
+  let oldTogglebtn = document.querySelector(`#toggleBtn-${num1}`);
+  let newTitleDiv = document.querySelector(`#todo-${num2}-title`);
+  let newDetailsDiv = document.querySelector(`#todo-${num2}-details`);
+  let newTogglebtn = document.querySelector(`#toggleBtn-${num2}`);
+
+  let temp = oldTitleDiv.innerHTML;
+  oldTitleDiv.innerHTML = newTitleDiv.innerHTML;
+  newTitleDiv.innerHTML = temp;
+
+  temp = oldDetailsDiv.innerHTML;
+  oldDetailsDiv.innerHTML = newDetailsDiv.innerHTML;
+  newDetailsDiv.innerHTML = temp;
+
+  let oldAttr = oldTogglebtn.getAttributeNode("src");
+  let oldSrc = oldAttr.value;
+  let newAttr = newTogglebtn.getAttributeNode("src");
+  let newSrc = newAttr.value;
+  if(oldSrc === "tick_.png") {
+    newTogglebtn.setAttribute("src","tick_.png");
+  }
+  else {
+    newTogglebtn.setAttribute("src","tick.png");
+  }
+
+  if(newSrc === "tick_.png") {
+    oldTogglebtn.setAttribute("src","tick_.png");
+  }
+  else {
+    oldTogglebtn.setAttribute("src","tick.png");
+  }
+}
+
 function tick(id) {
   let num = id.split("-");
   console.log(num);
@@ -41,6 +97,11 @@ function deleteTodo(id) {
 function addTask(title,details) {
   let div = document.createElement('div');
   div.setAttribute("id",`todo-${taskNo}`);
+  div.setAttribute('draggable','true');  //allow dragging functionality
+  div.setAttribute('ondragstart','drag(event)');
+  div.setAttribute('ondragover','allowdrop(event)');
+  div.setAttribute('ondrop','drop(event)');
+
   let parent = document.querySelector('.todo-div');
   parent.appendChild(div);
 
