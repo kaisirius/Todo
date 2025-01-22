@@ -2,6 +2,22 @@ let todoBtn = document.querySelector('#todo-btn');
 let todoTitle = document.querySelector('#todo-title');
 let todoDetails = document.querySelector('#todo-details');
 let taskNo = 1;
+const API_URL = "http://localhost:3000/Todos";
+
+function fetchTodos() {
+  fetch(API_URL, {
+    method : 'GET'
+  })
+    .then(response => response.json())
+    .then(todoList => {
+      console.log("reached here -> ");
+      console.log(todoList);
+      todoList.forEach(ele => {
+        console.log(ele);
+        addTask(ele.title, ele.details, ele.status);
+      });
+    });
+}
 
 
 
@@ -25,6 +41,13 @@ function drop(ev) {
   console.log(`old Id : ${num1}`);
   console.log(`new Id : ${num2}`);
 
+  fetch(API_URL + `/${num1}/${num2}`, {
+    method : 'PUT',
+  })
+    .then(response => response.json())
+    .then(mssg => console.log(mssg))
+    .catch(err => console.log("Error in drag & drop " + err));
+
   let oldTitleDiv = document.querySelector(`#todo-${num1}-title`);
   let oldDetailsDiv = document.querySelector(`#todo-${num1}-details`);
   let oldTogglebtn = document.querySelector(`#toggleBtn-${num1}`);
@@ -44,18 +67,18 @@ function drop(ev) {
   let oldSrc = oldAttr.value;
   let newAttr = newTogglebtn.getAttributeNode("src");
   let newSrc = newAttr.value;
-  if(oldSrc === "tick_.png") {
-    newTogglebtn.setAttribute("src","tick_.png");
+  if(oldSrc === "../tick_.png") {
+    newTogglebtn.setAttribute("src","../tick_.png");
   }
   else {
-    newTogglebtn.setAttribute("src","tick.png");
+    newTogglebtn.setAttribute("src","../tick.png");
   }
 
-  if(newSrc === "tick_.png") {
-    oldTogglebtn.setAttribute("src","tick_.png");
+  if(newSrc === "../tick_.png") {
+    oldTogglebtn.setAttribute("src","../tick_.png");
   }
   else {
-    oldTogglebtn.setAttribute("src","tick.png");
+    oldTogglebtn.setAttribute("src","../tick.png");
   }
 }
 
@@ -66,11 +89,39 @@ function tick(id) {
   let btn = document.querySelector(`#toggleBtn-${num}`);
   const attr = btn.getAttributeNode("src");
   const src = attr.value;
-  if(src === "tick_.png") {
-    btn.setAttribute("src","tick.png");
+  if(src === "../tick_.png") {
+    btn.setAttribute("src","../tick.png");
+
+    fetch(API_URL, {
+      method : 'PUT',
+      headers : {
+        'Content-Type' : 'application/json'
+      },
+      body : JSON.stringify({
+        status : true,
+        todoNum : num 
+      })
+    }) 
+      .then(response => response.json())
+      .then(message => console.log(message))
+      .catch(err => console.log("Error in updating" + err));
   }
   else {
-    btn.setAttribute("src","tick_.png");
+    btn.setAttribute("src","../tick_.png");
+
+    fetch(API_URL, {
+      method : 'PUT',
+      headers : {
+        'Content-Type' : 'application/json'
+      },
+      body : JSON.stringify({
+        status : false,
+        todoNum : num 
+      })
+    }) 
+      .then(response => response.json())
+      .then(message => console.log(message))
+      .catch(err => console.log("Error in updating" + err));
   }
 
 }
@@ -79,6 +130,19 @@ function deleteTodo(id) {
   let num = id.split("-");
   console.log(num);
   num = Number(num[1]);
+
+  fetch(API_URL,{
+    method : "DELETE",
+    headers : {
+      "Content-Type" : "application/json"
+    },
+    body : JSON.stringify({
+      todoNum : num
+    })
+  })
+    .then(() => console.log("Todo deleted"))
+    .catch(() => console.log("Error in deletion"));
+
   let container = document.querySelector(`#todo-${num}`);
   container.parentNode.removeChild(container);
   for(let i = num+1;i < taskNo;i++) {
@@ -94,8 +158,9 @@ function deleteTodo(id) {
   taskNo--;
 }
 
-function addTask(title,details) {
+function addTask(title, details, completeStatus) {
   let div = document.createElement('div');
+
   div.setAttribute("id",`todo-${taskNo}`);
   div.setAttribute('draggable','true');  //allow dragging functionality
   div.setAttribute('ondragstart','drag(event)');
@@ -104,6 +169,9 @@ function addTask(title,details) {
 
   let parent = document.querySelector('.todo-div');
   parent.appendChild(div);
+
+  let imgUse = 'tick_.png';
+  if(completeStatus) imgUse = 'tick.png';
 
   div.style.backgroundColor = '#65350f';  
   div.style.width = '250px';
@@ -119,10 +187,10 @@ function addTask(title,details) {
   <div id="todo-${taskNo}-details"></div>
   <div id="todo-${taskNo}-functions">
       <button id="todo-${taskNo}-tick" onClick="tick(document.activeElement.id);">
-        <img src="tick_.png" width="25" height="25" id="toggleBtn-${taskNo}">
+        <img src="../${imgUse}" width="25" height="25" id="toggleBtn-${taskNo}">
       </button>
       <button id="todo-${taskNo}-cross" onClick="deleteTodo(document.activeElement.id);"> 
-        <img src="cross.png" width="32" height="32" id="deleteBtn-${taskNo}">
+        <img src="../cross.png" width="32" height="32" id="deleteBtn-${taskNo}">
       </button>
   </div>
   `;
@@ -176,5 +244,30 @@ todoBtn.addEventListener('click', () => {
   let addDetails = todoDetails.value;
   console.log(addTitle);
   console.log(addDetails);
-  addTask(addTitle,addDetails);
+  addTask(addTitle, addDetails, false);
+
+  fetch(API_URL,{
+    method : 'POST',
+    headers : {
+      'Content-Type' : 'application/json'
+    },
+    body : JSON.stringify({
+      title : addTitle,
+      details : addDetails,
+      status : false
+    })
+  }) 
+    .then(response => {
+      if(!response.ok) {
+        throw new Error(`${response.status}`);
+      } else {
+        return response.json();
+      }
+    })
+    .then(mssg => console.log(mssg))
+    .catch(err => console.log("error in adding new todo " + err));
+});
+
+document.addEventListener('DOMContentLoaded',() => {
+  fetchTodos();
 });
