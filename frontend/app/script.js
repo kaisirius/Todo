@@ -237,6 +237,8 @@ function addTask(title, details, completeStatus, currentTaskNo) {
   eleTitle.style.fontStyle = 'normal';
   eleTitle.style.fontSize = '20px'
   eleTitle.style.height = 'fit-content';
+  eleTitle.style.textOverflow = 'ellipsis';
+  eleTitle.style.overflow = 'hidden';
 
   eleDetails.innerHTML = details;
   eleDetails.style.color = '#000000';
@@ -244,6 +246,11 @@ function addTask(title, details, completeStatus, currentTaskNo) {
   eleDetails.style.fontWeight = '500';
   eleDetails.style.fontStyle = 'normal';
   eleDetails.style.fontSize = '15px';
+  eleDetails.style.height = '58%';
+  eleDetails.style.overflowWrap = 'break-word';
+  eleDetails.style.overflow = 'hidden';
+  eleDetails.style.textOverflow = 'ellipsis';
+  
 
   eleFunc.style.position = 'absolute';
   eleFunc.style.bottom = '0';
