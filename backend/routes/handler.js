@@ -7,7 +7,8 @@ const bcrypt = require('bcrypt');
 const { SECRET_KEY } = require('../middleware/auth.js');
 const { userModel, todoModel } = require('../db/db.js');
 
-mongoose.connect("mongodb+srv://kaisirius:YUJJtQlsxpoSO0D0@cluster0.4nmp6.mongodb.net/todo-app");
+//replace your own mongo db cluster url
+mongoose.connect("mongodb+srv://<username>:<password>@cluster0.4nmp6.mongodb.net/todo-app");
 
 async function getMyLandingPage(req, res) {
   res.sendFile(path.join(__dirname,"/../../frontend/app/index.html"));
