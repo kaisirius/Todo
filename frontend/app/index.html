@@ -1,0 +1,39 @@
+<html>
+<head>
+  <title>Todo App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/app/style.css">
+</head>
+<body>
+  <div class="main-app">
+    <div class="nav-bar">
+      <div>
+        <h1 class="header">
+          Todo App
+        </h1>
+      </div>
+      <div style="margin-right: 25px; display: block" class="top-signin-btn-div">
+        <button class="top-signin-btn">Signin</button>
+      </div>
+      <div style="margin-right: 25px; display: none;" class="top-logout-btn-div">
+        <button class="top-logout-btn">Logout</button>
+      </div>
+    </div>
+    <div class="input">
+      <div class="input-div">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <input type="text" placeholder="Enter Todo's Title" id="todo-title" autocomplete="off">
+          <button id="todo-btn"> Add Todo </button>
+        </div>
+        <div style="height: 100%;">
+          <textarea id="todo-details" placeholder="Enter Todo's Details" autocomplete="off"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="todo-div"></div> 
+  </div>
+</body> 
+<script src="/frontend/app/script.js"></script>
+</html>
